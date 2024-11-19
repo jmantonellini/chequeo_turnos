@@ -24,7 +24,7 @@ async def automate_workflow():
     async with async_playwright() as p:
         # Launch the browser
         browser = await p.chromium.launch(
-            headless=False
+            headless=True
         )  # Use headless=True for headless mode
         context = await browser.new_context()
         page = await context.new_page()
