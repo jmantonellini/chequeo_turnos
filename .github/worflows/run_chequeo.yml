@@ -1,0 +1,31 @@
+name: Run Chequeo Script
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # This cron expression runs the job every hour
+  push:
+    branches:
+      - main  # Also run the job when there is a push to the main branch
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install python-telegram-bot --upgrade
+        pip install pytest-playwright
+        playwright install
+
+    - name: Run chequeo.py
+      run: python chequeo.py
