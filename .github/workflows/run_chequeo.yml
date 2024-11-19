@@ -2,7 +2,7 @@ name: Run Chequeo Script
 
 on:
   schedule:
-    - cron: '0 * * * *'  # This cron expression runs the job every hour
+    - cron: '*/10 * * * *'  # This cron expression runs the job every 10 minutes
   push:
     branches:
       - main  # Also run the job when there is a push to the main branch

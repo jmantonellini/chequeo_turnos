@@ -1,6 +1,8 @@
 import warnings
 import telegram
+import random
 import asyncio
+import time
 from playwright.async_api import async_playwright
 
 # Ignorar advertencias de urllib3
@@ -21,6 +23,12 @@ async def send_telegram_message(message="Hello, World!"):
 
 
 async def automate_workflow():
+    sleep_time = random.randint(
+        0, 300
+    )  # Random sleep time between 0 and 300 seconds (0 to 5 minutes)
+    print(f"Sleeping for {sleep_time} seconds to avoid detection...")
+    time.sleep(sleep_time)
+
     async with async_playwright() as p:
         # Launch the browser
         browser = await p.chromium.launch(
@@ -69,12 +77,16 @@ async def automate_workflow():
         mensaje_locator = page.locator(
             "div#idDivBktServicesContainer", has_text="No hay horas"
         )
+        current_time = time.strftime("%H:%M:%S", time.localtime())
         if await mensaje_locator.is_visible():
             print("No hay horas disponibles.")
-            await send_telegram_message("No hay horas, intentaré luego.")
+            await send_telegram_message(
+                f"No hay horas, intentaré luego. Chequeo hecho a las: ({current_time})"
+            )
         else:
-            await send_telegram_message("FIJATE AHORA!! HAY TURNOS DISPONIBLES!!")
-            await send_telegram_message("FIJATE AHORA!! HAY TURNOS DISPONIBLES!!")
+            await send_telegram_message(
+                "FIJATE AHORA!! HAY TURNOS DISPONIBLES!! Chequeo hecho a las: ({current_time})"
+            )
 
         # Close the browser
         await browser.close()
